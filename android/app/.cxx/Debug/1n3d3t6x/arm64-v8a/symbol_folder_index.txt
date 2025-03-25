@@ -1,0 +1,1 @@
+C:\Flutter projects\flutter_matkapaivakirja\build\app\intermediates\cxx\Debug\1n3d3t6x\obj\arm64-v8a
