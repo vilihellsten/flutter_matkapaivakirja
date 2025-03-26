@@ -59,6 +59,7 @@ class TripListManager extends ChangeNotifier {
       oldItem.title = item.title;
       oldItem.description = item.description;
       oldItem.date = item.date;
+      oldItem.location = item.location;
 
       //dbHelper.update(oldItem);
       fbHelper.updateTodoItem(oldItem); //uusi

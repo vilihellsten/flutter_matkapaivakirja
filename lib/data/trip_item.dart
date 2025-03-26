@@ -1,11 +1,12 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class TripItem {
   int id = 0;
   String title = '';
   String description = '';
   DateTime date = DateTime.now();
 
-  double latitude = 0.0;
-  double longitude = 0.0;
+  LatLng? location;
 
   String? fbid;
   String? ownerId;
@@ -15,8 +16,7 @@ class TripItem {
     required this.title,
     required this.description,
     required this.date,
-    //required this.latitude,
-    //required this.longitude,
+    required this.location,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,17 +25,29 @@ class TripItem {
       'title': title,
       'description': description,
       'date': date.millisecondsSinceEpoch,
+      'location': location != null
+          ? {'latitude': location!.latitude, 'longitude': location!.longitude}
+          : null,
     };
   }
 
   TripItem.fromJson(Map<dynamic, dynamic> json)
       : title = json['title'],
         description = json['description'],
-        date = DateTime.parse(json['date'] as String);
+        date = DateTime.parse(json['date'] as String),
+        location = json['location'] != null
+            ? LatLng(
+                json['location']['latitude'] as double,
+                json['location']['longitude'] as double,
+              )
+            : null; // Deserialize LatLng from a map
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         "title": title,
         "description": description,
         "date": date.toString(),
+        'location': location != null
+            ? {'latitude': location!.latitude, 'longitude': location!.longitude}
+            : null, // Serialize LatLng as a map
       };
 }

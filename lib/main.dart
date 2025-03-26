@@ -10,6 +10,7 @@ import 'package:flutter_matkapaivakirja/data/trip_list_manager.dart';
 import 'package:flutter_matkapaivakirja/view/add_trip.dart';
 import 'package:flutter_matkapaivakirja/view/trip_list.dart';
 import 'package:flutter_matkapaivakirja/data/db_helper.dart';
+import 'package:flutter_matkapaivakirja/view/map_screen.dart';
 
 import 'package:flutter_matkapaivakirja/view/home.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
             GetPage(name: '/add-trip', page: () => AddTripView()),
             GetPage(name: '/settings', page: () => SettingsScreen()),
             GetPage(name: '/trip-list', page: () => TripListView()),
+            GetPage(name: '/maps', page: () => MapsScreen()),
             GetPage(
               name: '/sign-in',
               page: () => SignInScreen(

@@ -58,6 +58,7 @@ class TripListView extends StatelessWidget {
                   children: [
                     Text(item.title),
                     Text(DateFormat('dd.MM.yyyy').format(item.date)),
+                    Text(item.location != null ? item.location!.toString() : "")
                   ]),
               subtitle: Text(item.description),
             ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "package:intl/intl.dart";
 import "package:provider/provider.dart";
 import 'package:flutter_matkapaivakirja/data/trip_list_manager.dart';
@@ -36,6 +37,7 @@ class _InputFormState extends State<InputForm> {
   String _title = "";
   String _description = "";
   DateTime _date = DateTime.now();
+  LatLng? _location;
 
   bool _isEdit = false; // tarkkailee ollaanko editoimassa
 
@@ -89,8 +91,15 @@ class _InputFormState extends State<InputForm> {
               maxLines: 5,
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/camera');
+              onPressed: () async {
+                final selectedLocation =
+                    await Navigator.pushNamed(context, '/maps');
+                if (selectedLocation != null) {
+                  setState(() {
+                    _location = selectedLocation
+                        as LatLng; // Assuming LatLng from Google Maps
+                  });
+                }
               },
               child: Text("Lisää sijainti"),
             ),
@@ -109,6 +118,7 @@ class _InputFormState extends State<InputForm> {
                     description: _description,
                     date: _date,
                     id: _id,
+                    location: _location,
                   );
 
                   if (!_isEdit) {
