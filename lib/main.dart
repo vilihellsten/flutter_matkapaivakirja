@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/firebase_helper.dart';
+import 'package:flutter_matkapaivakirja/view/public_trip_list.dart';
 import 'package:flutter_matkapaivakirja/view/settings_screen.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
     }
 
     return Obx(() => GetMaterialApp(
-          //debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.isDarkMode.value
@@ -63,6 +64,8 @@ class MyApp extends StatelessWidget {
             GetPage(name: '/settings', page: () => SettingsScreen()),
             GetPage(name: '/trip-list', page: () => TripListView()),
             GetPage(name: '/maps', page: () => MapsScreen()),
+            GetPage(
+                name: '/public-trip-list', page: () => PublicTripListView()),
             GetPage(
               name: '/sign-in',
               page: () => SignInScreen(
@@ -87,7 +90,6 @@ class MyApp extends StatelessWidget {
                   SignedOutAction((context) {
                     Provider.of<TripListManager>(context, listen: false)
                         .clearItems();
-
                     FirebaseAuth.instance.setPersistence(Persistence.NONE);
                     Get.offAllNamed('/sign-in');
                   }),

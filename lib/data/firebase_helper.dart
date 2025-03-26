@@ -17,8 +17,15 @@ class FirebaseHelper {
     return FirebaseDatabase.instance.ref().child('todoitems').child(user.uid);
   }
 
+  getPublicRef() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("No authenticated user found!");
+    }
+    return FirebaseDatabase.instance.ref().child("todoitems").once();
+  }
+
   void saveTodoItem(TripItem item) {
-// Ensure ownerId is set correctly
     final userRef = getUserRef();
     var itemRef = userRef.push();
     item.fbid = itemRef.key;
@@ -49,6 +56,29 @@ class FirebaseHelper {
       item.fbid = child.key;
       items.add(item);
     }
+    return items;
+  }
+
+  Future<List<TripItem>> getPublicData() async {
+    List<TripItem> items = [];
+
+    DatabaseEvent event = await getPublicRef();
+
+    var snapshot = event.snapshot;
+
+    // Iterate through each user's node
+    for (var user in snapshot.children) {
+      // Iterate through each trip item in the user's node
+      for (var trip in user.children) {
+        final tripData = trip.value as Map<dynamic, dynamic>;
+        if (tripData['julkinen'] == true) {
+          TripItem item = TripItem.fromJson(tripData);
+          item.fbid = trip.key; // Save the Firebase ID
+          items.add(item);
+        }
+      }
+    }
+
     return items;
   }
 }

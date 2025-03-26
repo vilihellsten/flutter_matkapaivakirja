@@ -7,6 +7,13 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Matkapäiväkirja'), actions: <Widget>[
         IconButton(
+          icon: Icon(Icons.add),
+          tooltip: 'Lisää uusi',
+          onPressed: () {
+            Navigator.pushNamed(context, '/add-trip');
+          },
+        ),
+        IconButton(
           icon: Icon(Icons.person),
           onPressed: () => Get.toNamed('/profile'),
           tooltip: "Profiili",
@@ -19,6 +26,10 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Get.toNamed('/trip-list'),
               child: Text('Matkapäiväkirjalista'),
+            ),
+            ElevatedButton(
+              onPressed: () => Get.toNamed('/public-trip-list'),
+              child: Text(' Julkinen Matkapäiväkirjalista'),
             ),
             ElevatedButton(
               onPressed: () {

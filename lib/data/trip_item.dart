@@ -5,6 +5,7 @@ class TripItem {
   String title = '';
   String description = '';
   DateTime date = DateTime.now();
+  bool? julkinen = false;
 
   LatLng? location;
 
@@ -17,6 +18,7 @@ class TripItem {
     required this.description,
     required this.date,
     required this.location,
+    required this.julkinen,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +30,7 @@ class TripItem {
       'location': location != null
           ? {'latitude': location!.latitude, 'longitude': location!.longitude}
           : null,
+      'julkinen': julkinen,
     };
   }
 
@@ -40,7 +43,8 @@ class TripItem {
                 json['location']['latitude'] as double,
                 json['location']['longitude'] as double,
               )
-            : null; // Deserialize LatLng from a map
+            : null, // Deserialize LatLng from a map
+        julkinen = json['julkinen'];
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         "title": title,
@@ -49,5 +53,6 @@ class TripItem {
         'location': location != null
             ? {'latitude': location!.latitude, 'longitude': location!.longitude}
             : null, // Serialize LatLng as a map
+        'julkinen': julkinen,
       };
 }

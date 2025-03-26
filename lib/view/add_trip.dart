@@ -39,6 +39,7 @@ class _InputFormState extends State<InputForm> {
   String _description = "";
   DateTime _date = DateTime.now();
   LatLng? _location;
+  bool? _julkinen = false;
 
   bool _isEdit = false; // tarkkailee ollaanko editoimassa
 
@@ -50,6 +51,7 @@ class _InputFormState extends State<InputForm> {
       _description = widget.item!.description;
       _date = widget.item!.date;
       _location = widget.item!.location;
+      _julkinen = widget.item!.julkinen;
 
       _isEdit = true;
       log("editoidaan${widget.item!.id}");
@@ -105,6 +107,15 @@ class _InputFormState extends State<InputForm> {
                     _date = value;
                   });
                 }),
+            Checkbox(
+              value: _julkinen,
+              onChanged: (bool? value) {
+                setState(() {
+                  _julkinen = value ?? false; // Update the state
+                });
+              },
+            ),
+            Text('Julkinen'),
             ElevatedButton(
               onPressed: () async {
                 final selectedLocation = await Navigator.push(
@@ -133,6 +144,7 @@ class _InputFormState extends State<InputForm> {
                     date: _date,
                     id: _id,
                     location: _location,
+                    julkinen: _julkinen,
                   );
 
                   if (!_isEdit) {

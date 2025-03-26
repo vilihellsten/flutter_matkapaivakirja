@@ -7,19 +7,25 @@ import 'firebase_helper.dart';
 
 class TripListManager extends ChangeNotifier {
   final List<TripItem> _items = [];
+  final List<TripItem> _publicItems = [];
   //final DatabaseHelper dbHelper = DatabaseHelper.instance;
   final FirebaseHelper fbHelper = FirebaseHelper();
 
   Future<void> init() async {
     //loadFromDB();
-    loadFromFirebase(); //uusi
+    loadFromFirebase();
+    loadPublicFromFirebase(); //uusi
   }
 
   UnmodifiableListView<TripItem> get items =>
-      UnmodifiableListView(_items.reversed); // !!!
+      UnmodifiableListView(_items.reversed);
+
+  UnmodifiableListView<TripItem> get publicItems =>
+      UnmodifiableListView(_publicItems.reversed); // !!!
 
   void clearItems() {
     _items.clear();
+    _publicItems.clear();
     notifyListeners();
   }
 
@@ -60,6 +66,7 @@ class TripListManager extends ChangeNotifier {
       oldItem.description = item.description;
       oldItem.date = item.date;
       oldItem.location = item.location;
+      oldItem.julkinen = item.julkinen;
 
       //dbHelper.update(oldItem);
       fbHelper.updateTodoItem(oldItem); //uusi
@@ -90,6 +97,19 @@ class TripListManager extends ChangeNotifier {
     for (TripItem item in list) {
       item.id = id;
       _items.add(item);
+      id++;
+    }
+    notifyListeners();
+  }
+
+  Future<void> loadPublicFromFirebase() async {
+    log("loadPublicFromFirebase");
+    _publicItems.clear();
+    final list = await fbHelper.getPublicData();
+    int id = 1;
+    for (TripItem item in list) {
+      item.id = id;
+      _publicItems.add(item);
       id++;
     }
     notifyListeners();

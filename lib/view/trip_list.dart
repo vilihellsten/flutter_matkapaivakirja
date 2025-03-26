@@ -40,14 +40,14 @@ class TripListView extends StatelessWidget {
         body: ListView.builder(
             itemCount: listManager.items.length,
             itemBuilder: (context, index) {
-              return _BuildTodoCard(
+              return _buildTodoCard(
                   listManager.items[index], context, listManager);
             }),
       );
     });
   }
 
-  Center _BuildTodoCard(
+  Center _buildTodoCard(
       item, BuildContext context, TripListManager listManager) {
     return Center(
       child: Card(
@@ -58,10 +58,20 @@ class TripListView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(item.title),
-                    Text(DateFormat('dd.MM.yyyy').format(item.date)),
-                    //Text(item.location != null ? item.location!.toString() : "")
+                    Text(DateFormat('dd.MM.yyyy').format(item.date))
                   ]),
               subtitle: Text(item.description),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "${item.julkinen == true ? "Julkinen" : "Privaatti"}",
+                  )
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -97,8 +107,6 @@ class TripListView extends StatelessWidget {
                     child: Text("Muokkaa")),
                 ElevatedButton(
                   onPressed: () {
-                    //Provider.of<TodoListManager>(context, listen: false)
-                    // .delete(item);
                     listManager.delete(item);
                   },
                   child: Text("Poista"),
