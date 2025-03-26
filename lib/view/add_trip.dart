@@ -63,7 +63,7 @@ class _InputFormState extends State<InputForm> {
             TextFormField(
               initialValue: _title,
               decoration: const InputDecoration(
-                  labelText: "Nimi", hintText: "Tehtävän nimi"),
+                  labelText: "Paikka", hintText: "Paikan nimi"),
               onChanged: (value) {
                 setState(() {
                   _title = value;
@@ -79,7 +79,7 @@ class _InputFormState extends State<InputForm> {
             TextFormField(
               initialValue: _description,
               decoration: const InputDecoration(
-                  labelText: "Kuvaus", hintText: "Tehtävän kuvaus"),
+                  labelText: "Kuvaus", hintText: "Tapahtuman kuvaus"),
               onChanged: (value) {
                 setState(() {
                   _description = value;
@@ -87,6 +87,12 @@ class _InputFormState extends State<InputForm> {
               },
               minLines: 3,
               maxLines: 5,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/camera');
+              },
+              child: Text("Lisää sijainti"),
             ),
             _FormDatePicker(
                 date: _date,
@@ -163,7 +169,7 @@ class _FormDatePickerState extends State<_FormDatePicker> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              'Deadline',
+              'Päivämäärä',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Text(
@@ -173,7 +179,7 @@ class _FormDatePickerState extends State<_FormDatePicker> {
           ],
         ),
         TextButton(
-          child: const Text('Edit'),
+          child: const Text('Muuta päivämäärää'),
           onPressed: () async {
             var newDate = await showDatePicker(
               context: context,
