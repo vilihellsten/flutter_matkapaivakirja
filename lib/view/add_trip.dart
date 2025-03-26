@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
+import 'package:flutter_matkapaivakirja/view/map_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "package:intl/intl.dart";
 import "package:provider/provider.dart";
@@ -48,6 +49,7 @@ class _InputFormState extends State<InputForm> {
       _title = widget.item!.title;
       _description = widget.item!.description;
       _date = widget.item!.date;
+      _location = widget.item!.location;
 
       _isEdit = true;
       log("editoidaan${widget.item!.id}");
@@ -92,16 +94,22 @@ class _InputFormState extends State<InputForm> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final selectedLocation =
-                    await Navigator.pushNamed(context, '/maps');
+                final selectedLocation = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MapsScreen(initialLocation: _location),
+                  ),
+                );
                 if (selectedLocation != null) {
                   setState(() {
-                    _location = selectedLocation
-                        as LatLng; // Assuming LatLng from Google Maps
+                    _location = selectedLocation as LatLng;
                   });
                 }
               },
-              child: Text("Lisää sijainti"),
+              child: _isEdit
+                  ? const Text("Muokkaa sijaintia")
+                  : const Text("Lisää sijainti"),
             ),
             _FormDatePicker(
                 date: _date,
@@ -144,8 +152,9 @@ class _InputFormState extends State<InputForm> {
                 }
               },
               child: _isEdit
-                  ? const Text("Muokkaa") // vaihtaa tekstin _isEdit riippuen
-                  : const Text("Lisää"), //opettele kysymysmerkki miten toimii
+                  ? const Text(
+                      "Muokkaus valmis") // vaihtaa tekstin _isEdit riippuen
+                  : const Text("Valmis"), //opettele kysymysmerkki miten toimii
             ),
           ],
         ),
