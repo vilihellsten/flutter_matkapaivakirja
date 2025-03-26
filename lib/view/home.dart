@@ -9,12 +9,17 @@ class HomeScreen extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.person),
           onPressed: () => Get.toNamed('/profile'),
+          tooltip: "Profiili",
         )
       ]),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ElevatedButton(
+              onPressed: () => Get.toNamed('/trip-list'),
+              child: Text('Matkapäiväkirjalista'),
+            ),
             ElevatedButton(
               onPressed: () {
                 Get.toNamed('/add-trip');
@@ -24,10 +29,6 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Get.toNamed('/settings'),
               child: Text('Asetukset'),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/trip-list'),
-              child: Text('Matkapäiväkirjalista'),
             ),
           ],
         ),

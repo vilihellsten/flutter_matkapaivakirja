@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_matkapaivakirja/view/map_screen.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -58,14 +59,34 @@ class TripListView extends StatelessWidget {
                   children: [
                     Text(item.title),
                     Text(DateFormat('dd.MM.yyyy').format(item.date)),
-                    Text(item.location != null ? item.location!.toString() : "")
+                    //Text(item.location != null ? item.location!.toString() : "")
                   ]),
               subtitle: Text(item.description),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
+                ElevatedButton(
+                    onPressed: () {
+                      if (item.location != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MapsScreen(
+                              initialLocation: item.location,
+                              readOnly: true, // Open in read-only mode
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Sijaintia ei ole asetettu.")),
+                        );
+                      }
+                    },
+                    child: Text("Näytä sijainti")),
+                ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -74,7 +95,7 @@ class TripListView extends StatelessWidget {
                       );
                     },
                     child: Text("Muokkaa")),
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     //Provider.of<TodoListManager>(context, listen: false)
                     // .delete(item);
