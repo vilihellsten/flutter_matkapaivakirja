@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:developer';
 
 class SettingsController extends GetxController {
-  var isDarkMode = true.obs;
+  var isDarkMode = false.obs;
 
-  void toggleTheme() => isDarkMode.value = !isDarkMode.value;
+  void toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+    log("Darkmodevalue ${isDarkMode.value}");
+  }
 }
 
 class SettingsScreen extends StatelessWidget {

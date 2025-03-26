@@ -1,12 +1,14 @@
-/*import 'dart:developer';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 import "package:intl/intl.dart";
+import "package:provider/provider.dart";
+import 'package:flutter_matkapaivakirja/data/trip_list_manager.dart';
 
-class InputView extends StatelessWidget {
+class AddTripView extends StatelessWidget {
   final TripItem? item;
-  const InputView({super.key, this.item});
+  const AddTripView({super.key, this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -93,19 +95,6 @@ class _InputFormState extends State<InputForm> {
                     _date = value;
                   });
                 }),
-            Row(
-              children: [
-                Checkbox(
-                  value: _done,
-                  onChanged: (value) {
-                    setState(() {
-                      _done = value!;
-                    });
-                  },
-                ),
-                const Text("Valmis"),
-              ],
-            ),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -118,7 +107,7 @@ class _InputFormState extends State<InputForm> {
 
                   if (!_isEdit) {
                     // opettele huutomerkit
-                    Provider.of<TodoListManager>(context, listen: false).addItem(
+                    Provider.of<TripListManager>(context, listen: false).addItem(
                         item); // lisätään uusi tehtävä käyttäen Todolistmanagerin metodeja
                     log("Lisätty: id ${item.id}");
 
@@ -126,7 +115,7 @@ class _InputFormState extends State<InputForm> {
                       const SnackBar(content: Text("Lisätty uusi tehtävä")),
                     );
                   } else {
-                    Provider.of<TodoListManager>(context, listen: false)
+                    Provider.of<TripListManager>(context, listen: false)
                         .update(item);
                     log("editoitu: id ${item.id}");
 
@@ -204,4 +193,4 @@ class _FormDatePickerState extends State<_FormDatePicker> {
       ],
     );
   }
-}*/
+}

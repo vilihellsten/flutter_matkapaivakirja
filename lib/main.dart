@@ -1,12 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_matkapaivakirja/data/firebase_helper.dart';
 import 'package:flutter_matkapaivakirja/view/settings_screen.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter_matkapaivakirja/data/trip_list_manager.dart';
+import 'package:flutter_matkapaivakirja/view/add_trip.dart';
+import 'package:flutter_matkapaivakirja/view/trip_list.dart';
+import 'package:flutter_matkapaivakirja/data/db_helper.dart';
 
-void main() {
+import 'package:flutter_matkapaivakirja/view/home.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'firebase_options.dart';
+import 'dart:developer'; // Add this import for logging
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Get.put(SettingsController());
-  runApp(MyApp());
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(
+    ChangeNotifierProvider(
+        create: (context) {
+          var model = TripListManager();
+          model.init(); // Initialize TripListManager on app start
+          return model;
+        },
+        child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,85 +39,61 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final providers = [EmailAuthProvider()];
+
+    void onSignedIn(BuildContext context) {
+      Provider.of<TripListManager>(context, listen: false).init();
+
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+
     return Obx(() => GetMaterialApp(
-          debugShowCheckedModeBanner: false,
+          //debugShowCheckedModeBanner: false,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.isDarkMode.value
               ? ThemeMode.dark
               : ThemeMode.light,
-          initialRoute: '/',
+          initialRoute:
+              FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
           getPages: [
-            GetPage(name: '/', page: () => HomeScreen()),
-            GetPage(name: '/counter', page: () => CounterScreen()),
+            GetPage(name: '/home', page: () => HomeScreen()),
+            GetPage(name: '/add-trip', page: () => AddTripView()),
             GetPage(name: '/settings', page: () => SettingsScreen()),
-            GetPage(name: '/camera', page: () => CameraScreen()),
+            GetPage(name: '/trip-list', page: () => TripListView()),
+            GetPage(
+              name: '/sign-in',
+              page: () => SignInScreen(
+                providers: providers,
+                actions: [
+                  AuthStateChangeAction<UserCreated>((context, state) {
+                    onSignedIn(context);
+                    //Get.offAllNamed('/home');
+                  }),
+                  AuthStateChangeAction<SignedIn>((context, state) {
+                    onSignedIn(context);
+                    //Get.offAllNamed('/home');
+                  }),
+                ],
+              ),
+            ),
+            GetPage(
+              name: '/profile',
+              page: () => ProfileScreen(
+                providers: providers,
+                actions: [
+                  SignedOutAction((context) {
+                    Provider.of<TripListManager>(context, listen: false)
+                        .clearItems();
+
+                    FirebaseAuth.instance.setPersistence(Persistence.NONE);
+                    Get.offAllNamed('/sign-in');
+                  }),
+                ],
+              ),
+            ),
           ],
         ));
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Matkapäiväkirja')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/counter'),
-              child: Text('Lisää merkintä'),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/settings'),
-              child: Text('Asetukset'),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/camera'),
-              child: Text('Open Camera'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CounterController extends GetxController {
-  var count = 0.obs;
-
-  void increment() => count++;
-}
-
-class CounterScreen extends StatelessWidget {
-  final CounterController controller = Get.put(CounterController());
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Counter Screen')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(() => Text('Count: ${controller.count}',
-                style: TextStyle(fontSize: 24))),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: controller.increment,
-              child: Text('Increment'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Get.back(),
-              child: Text('Back to Home'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 

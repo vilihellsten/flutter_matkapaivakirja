@@ -1,28 +1,31 @@
-/*import 'dart:collection';
+import 'dart:collection';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 
-import 'db_helper.dart';
 import 'firebase_helper.dart';
 
-class TodoListManager extends ChangeNotifier {
+class TripListManager extends ChangeNotifier {
   final List<TripItem> _items = [];
-  final DatabaseHelper dbHelper = DatabaseHelper.instance;
+  //final DatabaseHelper dbHelper = DatabaseHelper.instance;
   final FirebaseHelper fbHelper = FirebaseHelper();
-
 
   Future<void> init() async {
     //loadFromDB();
     loadFromFirebase(); //uusi
   }
 
-  UnmodifiableListView<TodoItem> get items =>
+  UnmodifiableListView<TripItem> get items =>
       UnmodifiableListView(_items.reversed); // !!!
+
+  void clearItems() {
+    _items.clear();
+    notifyListeners();
+  }
 
   //CRUD funktiot
 
-  void addItem(TodoItem item) {
+  void addItem(TripItem item) {
     if (_items.isEmpty) {
       item.id = 1;
     } else {
@@ -34,17 +37,17 @@ class TodoListManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void delete(TodoItem item) {
+  void delete(TripItem item) {
     _items.remove(item);
     //dbHelper.delete(item.id);
     fbHelper.deleteTodoItem(item); //uusi
     notifyListeners();
   }
 
-  void update(TodoItem item) {
-    TodoItem? oldItem;
+  void update(TripItem item) {
+    TripItem? oldItem;
 
-    for (TodoItem i in _items) {
+    for (TripItem i in _items) {
       if (i.id == item.id) {
         oldItem = i;
         break;
@@ -55,40 +58,39 @@ class TodoListManager extends ChangeNotifier {
       // päivittyy tiedot, tarkasta
       oldItem.title = item.title;
       oldItem.description = item.description;
-      oldItem.deadline = item.deadline;
-      oldItem.done = item.done;
+      oldItem.date = item.date;
 
       //dbHelper.update(oldItem);
       fbHelper.updateTodoItem(oldItem); //uusi
       notifyListeners();
     }
   }
-
-  void toggleDone(TodoItem item) {
+/*
+  void toggleDone(TripItem item) {
     item.done = !item.done;
     //dbHelper.update(item);
     fbHelper.updateTodoItem(item); //uusi
     notifyListeners();
-  }
+  }*/
 
   /*
   Future<void> loadFromDB() async {
     final list = await dbHelper.queryAllRows();
-    for (TodoItem item in list) {
+    for (TripItem item in list) {
       _items.add(item);
     }
     notifyListeners();
   }*/
 
   void loadFromFirebase() async {
-    //uusi
+    log("loadFromFirebase");
     final list = await fbHelper.getData();
     int id = 1;
-    for (TodoItem item in list) {
+    for (TripItem item in list) {
       item.id = id;
       _items.add(item);
       id++;
     }
     notifyListeners();
   }
-}*/
+}

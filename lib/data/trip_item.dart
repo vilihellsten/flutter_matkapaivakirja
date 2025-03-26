@@ -7,7 +7,7 @@ class TripItem {
   double latitude = 0.0;
   double longitude = 0.0;
 
-  String? fbId;
+  String? fbid;
   String? ownerId;
 
   TripItem({
@@ -27,4 +27,15 @@ class TripItem {
       'date': date.millisecondsSinceEpoch,
     };
   }
+
+  TripItem.fromJson(Map<dynamic, dynamic> json)
+      : title = json['title'],
+        description = json['description'],
+        date = DateTime.parse(json['date'] as String);
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        "title": title,
+        "description": description,
+        "date": date.toString(),
+      };
 }

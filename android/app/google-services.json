@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "598224899879",
+    "firebase_url": "https://flutter-matkapaivakirja-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "flutter-matkapaivakirja",
+    "storage_bucket": "flutter-matkapaivakirja.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598224899879:android:d1b67ea54257425011e302",
+        "android_client_info": {
+          "package_name": "com.example.flutter_matkapaivakirja"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfa4sEEMxTYFFVjbveavU-iimuuiUxNV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
