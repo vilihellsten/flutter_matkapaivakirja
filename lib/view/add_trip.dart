@@ -64,34 +64,47 @@ class _InputFormState extends State<InputForm> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            TextFormField(
-              initialValue: _title,
-              decoration: const InputDecoration(
-                  labelText: "Paikka", hintText: "Paikan nimi"),
-              onChanged: (value) {
-                setState(() {
-                  _title = value;
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Nimi ei voi olla tyhjä";
-                }
-                return null;
-              },
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                initialValue: _title,
+                decoration: const InputDecoration(
+                    labelText: "Paikka", hintText: "Paikan nimi"),
+                onChanged: (value) {
+                  setState(() {
+                    _title = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Nimi ei voi olla tyhjä";
+                  }
+                  return null;
+                },
+              ),
             ),
-            TextFormField(
-              initialValue: _description,
-              decoration: const InputDecoration(
-                  labelText: "Kuvaus", hintText: "Tapahtuman kuvaus"),
-              onChanged: (value) {
-                setState(() {
-                  _description = value;
-                });
-              },
-              minLines: 3,
-              maxLines: 5,
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextFormField(
+                initialValue: _description,
+                decoration: const InputDecoration(
+                    labelText: "Kuvaus", hintText: "Tapahtuman kuvaus"),
+                onChanged: (value) {
+                  setState(() {
+                    _description = value;
+                  });
+                },
+                minLines: 3,
+                maxLines: 5,
+              ),
             ),
+            _FormDatePicker(
+                date: _date,
+                onChanged: (value) {
+                  setState(() {
+                    _date = value;
+                  });
+                }),
             ElevatedButton(
               onPressed: () async {
                 final selectedLocation = await Navigator.push(
@@ -111,13 +124,6 @@ class _InputFormState extends State<InputForm> {
                   ? const Text("Muokkaa sijaintia")
                   : const Text("Lisää sijainti"),
             ),
-            _FormDatePicker(
-                date: _date,
-                onChanged: (value) {
-                  setState(() {
-                    _date = value;
-                  });
-                }),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -179,43 +185,46 @@ class _FormDatePicker extends StatefulWidget {
 class _FormDatePickerState extends State<_FormDatePicker> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              'Päivämäärä',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Text(
-              DateFormat("d.M.yyyy").format(widget.date),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        TextButton(
-          child: const Text('Muuta päivämäärää'),
-          onPressed: () async {
-            var newDate = await showDatePicker(
-              context: context,
-              initialDate: widget.date,
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
-            );
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                'Päivämäärä',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              Text(
+                DateFormat("d.M.yyyy").format(widget.date),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
+          ElevatedButton(
+            child: const Text('Muuta päivämäärää'),
+            onPressed: () async {
+              var newDate = await showDatePicker(
+                context: context,
+                initialDate: widget.date,
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+              );
 
-            // Don't change the date if the date picker returns null.
-            if (newDate == null) {
-              return;
-            }
+              // Don't change the date if the date picker returns null.
+              if (newDate == null) {
+                return;
+              }
 
-            widget.onChanged(newDate);
-          },
-        )
-      ],
+              widget.onChanged(newDate);
+            },
+          )
+        ],
+      ),
     );
   }
 }

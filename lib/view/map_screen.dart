@@ -4,8 +4,13 @@ import 'package:geolocator/geolocator.dart';
 
 class MapsScreen extends StatefulWidget {
   final LatLng? initialLocation; // Optional initial location
+  final bool readOnly; // New parameter to enable read-only mode
 
-  const MapsScreen({Key? key, this.initialLocation}) : super(key: key);
+  const MapsScreen({
+    Key? key,
+    this.initialLocation,
+    this.readOnly = false, // Default is false (editable mode)
+  }) : super(key: key);
 
   @override
   _MapsScreenState createState() => _MapsScreenState();
@@ -68,7 +73,11 @@ class _MapsScreenState extends State<MapsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Valitse sijainti")),
+      appBar: AppBar(
+        title: widget.readOnly
+            ? const Text("Näytä sijainti") // Title for read-only mode
+            : const Text("Valitse sijainti"), // Title for editable mode
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
@@ -76,33 +85,40 @@ class _MapsScreenState extends State<MapsScreen> {
                 target: _initialPosition,
                 zoom: 15,
               ),
-              onTap: (LatLng location) {
-                setState(() {
-                  _selectedLocation = location;
-                });
+              onTap: widget.readOnly
+                  ? null // Disable onTap if readOnly is true
+                  : (LatLng location) {
+                      setState(() {
+                        _selectedLocation = location;
+                      });
+                    },
+              markers: {
+                if (_selectedLocation != null && !widget.readOnly)
+                  Marker(
+                    markerId: const MarkerId("selected"),
+                    position: _selectedLocation!,
+                  ),
+                if (widget.initialLocation != null)
+                  Marker(
+                    markerId: const MarkerId("initial"),
+                    position: widget.initialLocation!,
+                  ),
               },
-              markers: _selectedLocation != null
-                  ? {
-                      Marker(
-                        markerId: const MarkerId("selected"),
-                        position: _selectedLocation!,
-                      ),
-                    }
-                  : widget.initialLocation != null
-                      ? {
-                          Marker(
-                            markerId: const MarkerId("initial"),
-                            position: widget.initialLocation!,
-                          ),
-                        }
-                      : {},
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(context, _selectedLocation ?? widget.initialLocation);
-        },
-        child: const Icon(Icons.check),
-      ),
+      floatingActionButton: widget.readOnly
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the map without changes
+              },
+              child: const Icon(Icons.close),
+            )
+          : FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(
+                    context, _selectedLocation ?? widget.initialLocation);
+              },
+              child: const Icon(Icons.check),
+            ),
     );
   }
 }
