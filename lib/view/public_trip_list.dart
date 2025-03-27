@@ -14,6 +14,8 @@ class PublicTripListView extends StatefulWidget {
 }
 
 class _PublicTripListViewState extends State<PublicTripListView> {
+  String haku = "";
+
   @override
   void initState() {
     super.initState();
@@ -28,14 +30,44 @@ class _PublicTripListViewState extends State<PublicTripListView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TripListManager>(builder: (context, listManager, child) {
+      final filtteroidyt = listManager.publicItems.where((item) {
+        final filtteri = haku.toLowerCase();
+        return item.title.toLowerCase().contains(filtteri) ||
+            item.description.toLowerCase().contains(filtteri);
+      }).toList();
+
       return Scaffold(
         appBar: AppBar(title: const Text("Julkiset Matkat")),
-        body: ListView.builder(
-          itemCount: listManager.publicItems.length,
-          itemBuilder: (context, index) {
-            return _buildTodoCard(
-                listManager.publicItems[index], context, listManager);
-          },
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: "Haku",
+                  hintText: "Hae matkoja paikan tai kuvauksen perusteella",
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    haku = value; // Update the search query
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: filtteroidyt.isEmpty
+                  ? const Center(child: Text("Ei tuloksia haulle."))
+                  : ListView.builder(
+                      itemCount: filtteroidyt.length, // Use the filtered list
+                      itemBuilder: (context, index) {
+                        return _buildTodoCard(
+                            filtteroidyt[index], context, listManager);
+                      },
+                    ),
+            ),
+          ],
         ),
       );
     });

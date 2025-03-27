@@ -54,7 +54,7 @@ class _MapsScreenState extends State<MapsScreen> {
       }
 
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.best);
 
       setState(() {
         _initialPosition = LatLng(position.latitude, position.longitude);

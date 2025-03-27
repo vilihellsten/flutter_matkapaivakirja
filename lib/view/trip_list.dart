@@ -1,48 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../data/trip_list_manager.dart';
 import 'package:flutter_matkapaivakirja/view/add_trip.dart';
 
-class TripListView extends StatelessWidget {
+class TripListView extends StatefulWidget {
   const TripListView({super.key});
+
+  @override
+  _TripListViewState createState() => _TripListViewState();
+}
+
+class _TripListViewState extends State<TripListView> {
+  String _searchQuery = ""; // Holds the current search query
 
   @override
   Widget build(BuildContext context) {
     return Consumer<TripListManager>(builder: (context, listManager, child) {
+      // Filter the user's trips based on the search query
+      final filteredItems = listManager.items.where((item) {
+        final query = _searchQuery.toLowerCase();
+        return item.title.toLowerCase().contains(query) ||
+            item.description.toLowerCase().contains(query);
+      }).toList();
+
       return Scaffold(
-        appBar: AppBar(title: Text("Matkapäiväkirja"), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            tooltip: 'Lisää uusi',
-            onPressed: () {
-              Navigator.pushNamed(context, '/add-trip');
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.person),
-            tooltip: 'Profiili',
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.camera),
-            tooltip: 'Camera',
-            onPressed: () {
-              Navigator.pushNamed(context, '/camera');
-            },
-          ),
-        ]),
-        body: ListView.builder(
-            itemCount: listManager.items.length,
-            itemBuilder: (context, index) {
-              return _buildTodoCard(
-                  listManager.items[index], context, listManager);
-            }),
+        appBar: AppBar(
+          title: const Text("Omat matkat"),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add),
+              tooltip: 'Lisää uusi',
+              onPressed: () {
+                Navigator.pushNamed(context, '/add-trip');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person),
+              tooltip: 'Profiili',
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.camera),
+              tooltip: 'Camera',
+              onPressed: () {
+                Navigator.pushNamed(context, '/camera');
+              },
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: "Haku",
+                  hintText: "Hae matkoja paikan tai kuvauksen perusteella",
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value; // Update the search query
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: filteredItems.isEmpty
+                  ? const Center(child: Text("Ei tuloksia haulle."))
+                  : ListView.builder(
+                      itemCount: filteredItems.length, // Use the filtered list
+                      itemBuilder: (context, index) {
+                        return _buildTodoCard(
+                            filteredItems[index], context, listManager);
+                      },
+                    ),
+            ),
+          ],
+        ),
       );
     });
   }
@@ -95,7 +136,7 @@ class TripListView extends StatelessWidget {
                         );
                       }
                     },
-                    child: Text("Näytä sijainti")),
+                    child: const Text("Näytä sijainti")),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -104,12 +145,12 @@ class TripListView extends StatelessWidget {
                             builder: (context) => AddTripView(item: item)),
                       );
                     },
-                    child: Text("Muokkaa")),
+                    child: const Text("Muokkaa")),
                 ElevatedButton(
                   onPressed: () {
                     listManager.delete(item);
                   },
-                  child: Text("Poista"),
+                  child: const Text("Poista"),
                 )
               ],
             )

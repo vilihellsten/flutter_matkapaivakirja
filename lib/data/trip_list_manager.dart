@@ -14,7 +14,6 @@ class TripListManager extends ChangeNotifier {
   Future<void> init() async {
     //loadFromDB();
     loadFromFirebase();
-    loadPublicFromFirebase(); //uusi
   }
 
   UnmodifiableListView<TripItem> get items =>

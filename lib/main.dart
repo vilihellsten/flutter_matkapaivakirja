@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/firebase_helper.dart';
 import 'package:flutter_matkapaivakirja/view/public_trip_list.dart';
 import 'package:flutter_matkapaivakirja/view/settings_screen.dart';
+import 'package:flutter_matkapaivakirja/view/weather.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -45,7 +46,6 @@ class MyApp extends StatelessWidget {
 
     void onSignedIn(BuildContext context) {
       Provider.of<TripListManager>(context, listen: false).init();
-
       Navigator.pushReplacementNamed(context, '/home');
     }
 
@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
             GetPage(name: '/settings', page: () => SettingsScreen()),
             GetPage(name: '/trip-list', page: () => TripListView()),
             GetPage(name: '/maps', page: () => MapsScreen()),
+            GetPage(name: '/weather', page: () => WeatherView()),
             GetPage(
                 name: '/public-trip-list', page: () => PublicTripListView()),
             GetPage(

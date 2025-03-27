@@ -107,33 +107,38 @@ class _InputFormState extends State<InputForm> {
                     _date = value;
                   });
                 }),
-            Checkbox(
-              value: _julkinen,
-              onChanged: (bool? value) {
-                setState(() {
-                  _julkinen = value ?? false; // Update the state
-                });
-              },
-            ),
-            Text('Julkinen'),
-            ElevatedButton(
-              onPressed: () async {
-                final selectedLocation = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        MapsScreen(initialLocation: _location),
-                  ),
-                );
-                if (selectedLocation != null) {
+            Row(children: [
+              Checkbox(
+                value: _julkinen,
+                onChanged: (bool? value) {
                   setState(() {
-                    _location = selectedLocation as LatLng;
+                    _julkinen = value ?? false; // Update the state
                   });
-                }
-              },
-              child: _isEdit
-                  ? const Text("Muokkaa sijaintia")
-                  : const Text("Lisää sijainti"),
+                },
+              ),
+              Text('Julkinen ( kaikkien nähtävissä )'),
+            ]),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  final selectedLocation = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MapsScreen(initialLocation: _location),
+                    ),
+                  );
+                  if (selectedLocation != null) {
+                    setState(() {
+                      _location = selectedLocation as LatLng;
+                    });
+                  }
+                },
+                child: _isEdit
+                    ? const Text("Muokkaa sijaintia")
+                    : const Text("Lisää sijainti"),
+              ),
             ),
             ElevatedButton(
               onPressed: () {

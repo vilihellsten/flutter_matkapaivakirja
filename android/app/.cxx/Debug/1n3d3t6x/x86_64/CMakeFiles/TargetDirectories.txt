@@ -1,2 +1,0 @@
-C:/Flutter projects/flutter_matkapaivakirja/android/app/.cxx/Debug/1n3d3t6x/x86_64/CMakeFiles/edit_cache.dir
-C:/Flutter projects/flutter_matkapaivakirja/android/app/.cxx/Debug/1n3d3t6x/x86_64/CMakeFiles/rebuild_cache.dir

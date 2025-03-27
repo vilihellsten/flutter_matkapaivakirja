@@ -23,23 +23,44 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/trip-list'),
-              child: Text('Matkapäiväkirjalista'),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () => Get.toNamed('/trip-list'),
+                child: Text('Oma matkapäiväkirja'),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/public-trip-list'),
-              child: Text(' Julkinen Matkapäiväkirjalista'),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () => Get.toNamed('/public-trip-list'),
+                child: Text('Julkiset matkat'),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Get.toNamed('/add-trip');
-              },
-              child: Text('Lisää merkintä'),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.toNamed('/add-trip');
+                },
+                child: Text('Lisää matka'),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/settings'),
-              child: Text('Asetukset'),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.toNamed('/weather');
+                },
+                child: Text('Sää'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () => Get.toNamed('/settings'),
+                child: Text('Asetukset'),
+              ),
             ),
           ],
         ),
