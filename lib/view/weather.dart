@@ -21,13 +21,15 @@ class _WeatherViewState extends State<WeatherView> {
 
   //nykyinen sijainti
   String asema = "";
-  String kuvaus = "";
+  String kuvaus = "Ladataan";
+  String maa = "";
   double lampotila = 0;
 
   //käyttäjän oma haku
   String haku = "";
   String asema1 = "";
   String kuvaus1 = "";
+  String maa1 = "";
   double lampotila1 = 0;
 
   @override
@@ -66,7 +68,8 @@ class _WeatherViewState extends State<WeatherView> {
       setState(() {
         kuvaus = data["weather"][0]["description"];
         lampotila = data["main"]["temp"];
-        asema = data["name"];
+        asema = "Lähin sääasema: ${data["name"]},";
+        maa = data["sys"]["country"];
       });
     } else {
       log("Virhe sään hakemisessa");
@@ -85,7 +88,8 @@ class _WeatherViewState extends State<WeatherView> {
       setState(() {
         kuvaus1 = data["weather"][0]["description"];
         lampotila1 = data["main"]["temp"];
-        asema1 = data["name"];
+        asema1 = "${data["name"]},";
+        maa1 = data["sys"]["country"];
       });
     } else {
       log("Virhe sään hakemisessa");
@@ -101,16 +105,17 @@ class _WeatherViewState extends State<WeatherView> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child:
                     Text("Nykyinen sijainti", style: TextStyle(fontSize: 20)),
               ),
-              Text("Lähin sääasema: $asema"),
-              Text("Sää: $kuvaus"),
-              Text("Lämpötila: ${lampotila.toStringAsFixed(1)} °C"),
+              Text("${lampotila.toStringAsFixed(1)} °C",
+                  style: TextStyle(fontSize: 30)),
+              Text("$asema $maa"),
+              Text(kuvaus),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Text("Hae sää kaupungin perusteella",
@@ -134,10 +139,11 @@ class _WeatherViewState extends State<WeatherView> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: Text("Kaupunki: $asema1"),
+                child: Text("${lampotila1.toStringAsFixed(1)} °C",
+                    style: TextStyle(fontSize: 30)),
               ),
-              Text("Sää: $kuvaus1"),
-              Text("Lämpötila: ${lampotila1.toStringAsFixed(1)} °C"),
+              Text("$asema1 $maa1"),
+              Text(kuvaus1),
             ],
           ),
         ),
