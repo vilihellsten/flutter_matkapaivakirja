@@ -19,12 +19,27 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Asetukset')),
       body: Center(
-        child: Obx(() => SwitchListTile(
-              title: Text('Tumma tila'),
-              value: controller.isDarkMode.value,
-              onChanged: (value) => controller.toggleTheme(),
+        child: Obx(() => Padding(
+              padding: const EdgeInsets.all(100.0),
+              child: SwitchListTile(
+                title: Text('Tumma tila'),
+                value: controller.isDarkMode.value,
+                onChanged: (value) => controller.toggleTheme(),
+              ),
             )),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          onPressed: () {
+            Navigator.pop(context); // Close the current view
+          },
+          child: const Icon(Icons.arrow_back),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }

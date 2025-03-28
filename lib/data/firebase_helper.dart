@@ -6,7 +6,7 @@ class FirebaseHelper {
   /*
   void clearUserData() {
     final userId = FirebaseAuth.instance.currentUser!.uid;
-    FirebaseDatabase.instance.ref().child('todoitems').child(userId).remove();
+    FirebaseDatabase.instance.ref().child('tripitems').child(userId).remove();
   }*/
 
   DatabaseReference getUserRef() {

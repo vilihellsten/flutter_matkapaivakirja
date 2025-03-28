@@ -17,6 +17,18 @@ class AddTripView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Lisää uusi matka")),
       body: InputForm(item: item),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          onPressed: () {
+            Navigator.pop(context); // Close the current view
+          },
+          child: const Icon(Icons.arrow_back),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
@@ -118,28 +130,36 @@ class _InputFormState extends State<InputForm> {
               ),
               Text('Julkinen ( kaikkien nähtävissä )'),
             ]),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  final selectedLocation = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MapsScreen(initialLocation: _location),
-                    ),
-                  );
-                  if (selectedLocation != null) {
-                    setState(() {
-                      _location = selectedLocation as LatLng;
-                    });
-                  }
-                },
-                child: _isEdit
-                    ? const Text("Muokkaa sijaintia")
-                    : const Text("Lisää sijainti"),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child:
+                    ElevatedButton(onPressed: null, child: Text("Lisää kuva")),
               ),
-            ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 10.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final selectedLocation = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MapsScreen(initialLocation: _location),
+                      ),
+                    );
+                    if (selectedLocation != null) {
+                      setState(() {
+                        _location = selectedLocation as LatLng;
+                      });
+                    }
+                  },
+                  child: _isEdit
+                      ? const Text("Muokkaa sijaintia")
+                      : const Text("Lisää sijainti"),
+                ),
+              ),
+            ]),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {

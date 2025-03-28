@@ -5,20 +5,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Matkapäiväkirja'), actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          tooltip: 'Lisää uusi',
-          onPressed: () {
-            Navigator.pushNamed(context, '/add-trip');
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.person),
-          onPressed: () => Get.toNamed('/profile'),
-          tooltip: "Profiili",
-        )
-      ]),
+      appBar: AppBar(
+          title: Text('Matkapäiväkirja'),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              tooltip: 'Lisää uusi',
+              onPressed: () {
+                Navigator.pushNamed(context, '/add-trip');
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () => Get.toNamed('/profile'),
+              tooltip: "Profiili",
+            )
+          ]),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed('/add-trip');
                 },
-                child: Text('Lisää matka'),
+                child: Text('+ Lisää matka'),
               ),
             ),
             Padding(
@@ -52,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed('/weather');
                 },
-                child: Text('Sää'),
+                child: Text('Säätiedot'),
               ),
             ),
             Padding(

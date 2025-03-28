@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherView extends StatefulWidget {
@@ -27,7 +28,7 @@ class _WeatherViewState extends State<WeatherView> {
 
   //käyttäjän oma haku
   String haku = "";
-  String asema1 = "";
+  String asema1 = "Kaupunki";
   String kuvaus1 = "";
   String maa1 = "";
   double lampotila1 = 0;
@@ -40,6 +41,23 @@ class _WeatherViewState extends State<WeatherView> {
 
   Future<void> _weather() async {
     try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        throw Exception('Location services are disabled.');
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw Exception('Location permissions are denied.');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied.');
+      }
+
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
     } catch (e) {
@@ -48,16 +66,15 @@ class _WeatherViewState extends State<WeatherView> {
 
     if (position == null) {
       url =
-          "https://api.openweathermap.org/data/2.5/weather?q=$kaupunki&appid=$api&units=metric&lang=fi";
+          "https://api.openweathermap.org/data/2.5/weather?q=$kaupunki&appid=$api&units=metric&lang=fi"; // jos ei löydy nykyistä sijaintai
     } else {
       double latitude = position!.latitude;
       double longitude = position!.longitude;
       log(longitude.toString());
       log(latitude.toString());
       url =
-          "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$api&units=metric&lang=fi";
+          "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$api&units=metric&lang=fi"; //jos sijainti löytyy
     }
-    log(url);
 
     final response = await http.get(Uri.parse(url));
 
@@ -77,9 +94,8 @@ class _WeatherViewState extends State<WeatherView> {
   }
 
   Future<void> _haku() async {
-    url =
-        "https://api.openweathermap.org/data/2.5/weather?q=$haku&appid=$api&units=metric&lang=fi";
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(
+        "https://api.openweathermap.org/data/2.5/weather?q=$haku&appid=$api&units=metric&lang=fi"));
 
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
@@ -99,13 +115,11 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sää')),
+      appBar: AppBar(title: Text('Säätiedot')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
@@ -143,11 +157,23 @@ class _WeatherViewState extends State<WeatherView> {
                     style: TextStyle(fontSize: 30)),
               ),
               Text("$asema1 $maa1"),
-              Text(kuvaus1),
+              Text(kuvaus1)
             ],
           ),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          onPressed: () {
+            Navigator.pop(context); // Close the current view
+          },
+          child: const Icon(Icons.arrow_back),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
