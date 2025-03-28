@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
@@ -92,28 +94,63 @@ class _PublicTripListViewState extends State<PublicTripListView> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      if (item.location != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MapsScreen(
-                              initialLocation: item.location,
-                              readOnly: true, // Open in read-only mode
-                            ),
+                  onPressed: () {
+                    if (item.imageUrl != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ImageScreen(imageUrl: item.imageUrl!),
+                        ),
+                      );
+                    }
+                  },
+                  child: item.imageUrl != null
+                      ? const Text("Näytä kuva")
+                      : const Text("Ei kuvaa"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (item.location != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MapsScreen(
+                            initialLocation: item.location,
+                            readOnly: true, // Open in read-only mode
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Sijaintia ei ole asetettu.")),
-                        );
-                      }
-                    },
-                    child: const Text("Näytä sijainti")),
+                        ),
+                      );
+                    }
+                  },
+                  child: item.location != null
+                      ? const Text("Näytä sijainti")
+                      : const Text("Ei sijaintia"),
+                ),
               ],
-            )
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImageScreen extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageScreen({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Kuva"),
+      ),
+      body: Center(
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
         ),
       ),
     );

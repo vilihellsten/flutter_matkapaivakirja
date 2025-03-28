@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -42,13 +43,6 @@ class _TripListViewState extends State<TripListView> {
               tooltip: 'Profiili',
               onPressed: () {
                 Navigator.pushNamed(context, '/profile');
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.camera),
-              tooltip: 'Camera',
-              onPressed: () {
-                Navigator.pushNamed(context, '/camera');
               },
             ),
           ],
@@ -109,7 +103,7 @@ class _TripListViewState extends State<TripListView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "${item.julkinen == true ? "Julkinen" : "Privaatti"}",
+                    "${item.julkinen == true ? "Julkinen" : "Yksityinen"}",
                   )
                 ],
               ),
@@ -118,25 +112,39 @@ class _TripListViewState extends State<TripListView> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      if (item.location != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MapsScreen(
-                              initialLocation: item.location,
-                              readOnly: true, // Open in read-only mode
-                            ),
+                  onPressed: () {
+                    if (item.imageUrl != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ImageScreen(imageUrl: item.imageUrl!),
+                        ),
+                      );
+                    }
+                  },
+                  child: item.imageUrl != null
+                      ? const Text("Näytä kuva")
+                      : const Text("Ei kuvaa"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (item.location != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MapsScreen(
+                            initialLocation: item.location,
+                            readOnly: true, // Open in read-only mode
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Sijaintia ei ole asetettu.")),
-                        );
-                      }
-                    },
-                    child: const Text("Näytä sijainti")),
+                        ),
+                      );
+                    }
+                  },
+                  child: item.location != null
+                      ? const Text("Näytä sijainti")
+                      : const Text("Ei sijaintia"),
+                ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -146,15 +154,71 @@ class _TripListViewState extends State<TripListView> {
                       );
                     },
                     child: const Text("Muokkaa")),
-                ElevatedButton(
-                  onPressed: () {
-                    listManager.delete(item);
-                  },
-                  child: const Text("Poista"),
-                )
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _confirmDelete(context, listManager, item);
+                },
+                child: const Text("Poista"),
+              ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+void _confirmDelete(context, listmanager, item) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Poista"),
+        content: const Text("Oletko varma, että haluat poistaa tämän?"),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text("Ei"),
+              ),
+              TextButton(
+                  onPressed: () {
+                    // Call the delete method from FirebaseHelper
+                    listmanager.delete(item);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Kyllä")),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class ImageScreen extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageScreen({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Kuva"),
+      ),
+      body: Center(
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
         ),
       ),
     );

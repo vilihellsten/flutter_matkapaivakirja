@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 
 class FirebaseHelper {
@@ -36,6 +39,16 @@ class FirebaseHelper {
   void deleteTodoItem(TripItem item) {
     if (item.fbid != null) {
       getUserRef().child(item.fbid!).remove();
+    }
+
+    if (item.imageUrl != null) {
+      try {
+        final oldImageRef = FirebaseStorage.instance.refFromURL(item.imageUrl!);
+        oldImageRef.delete();
+        item.imageUrl = null; // Reset the old image path
+      } catch (e) {
+        log('Error deleting image: $e');
+      }
     }
   }
 

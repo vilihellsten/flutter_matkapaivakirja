@@ -11,6 +11,7 @@ class TripItem {
 
   String? fbid;
   String? ownerId;
+  String? imageUrl;
 
   TripItem({
     this.id = 0,
@@ -19,6 +20,7 @@ class TripItem {
     required this.date,
     required this.location,
     required this.julkinen,
+    required this.imageUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class TripItem {
           ? {'latitude': location!.latitude, 'longitude': location!.longitude}
           : null,
       'julkinen': julkinen,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -44,7 +47,8 @@ class TripItem {
                 json['location']['longitude'] as double,
               )
             : null, // Deserialize LatLng from a map
-        julkinen = json['julkinen'];
+        julkinen = json['julkinen'],
+        imageUrl = json['imageUrl'];
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         "title": title,
@@ -54,5 +58,6 @@ class TripItem {
             ? {'latitude': location!.latitude, 'longitude': location!.longitude}
             : null, // Serialize LatLng as a map
         'julkinen': julkinen,
+        'imageUrl': imageUrl,
       };
 }

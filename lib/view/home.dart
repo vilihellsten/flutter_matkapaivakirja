@@ -30,14 +30,15 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: ElevatedButton(
                 onPressed: () => Get.toNamed('/trip-list'),
-                child: Text('Oma matkapäiväkirja'),
+                child:
+                    Text('Oma matkapäiväkirja', style: TextStyle(fontSize: 17)),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: ElevatedButton(
                 onPressed: () => Get.toNamed('/public-trip-list'),
-                child: Text('Julkiset matkat'),
+                child: Text('Julkiset matkat', style: TextStyle(fontSize: 17)),
               ),
             ),
             Padding(
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed('/add-trip');
                 },
-                child: Text('+ Lisää matka'),
+                child: Text('+ Lisää matka', style: TextStyle(fontSize: 17)),
               ),
             ),
             Padding(
@@ -55,14 +56,14 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed('/weather');
                 },
-                child: Text('Säätiedot'),
+                child: Text('Säätiedot', style: TextStyle(fontSize: 17)),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: ElevatedButton(
                 onPressed: () => Get.toNamed('/settings'),
-                child: Text('Asetukset'),
+                child: Text('Asetukset', style: TextStyle(fontSize: 17)),
               ),
             ),
           ],

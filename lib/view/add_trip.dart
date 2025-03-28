@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
+import 'package:flutter_matkapaivakirja/view/camera.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "package:intl/intl.dart";
@@ -52,6 +54,7 @@ class _InputFormState extends State<InputForm> {
   DateTime _date = DateTime.now();
   LatLng? _location;
   bool? _julkinen = false;
+  String? _imageUrl;
 
   bool _isEdit = false; // tarkkailee ollaanko editoimassa
 
@@ -64,6 +67,7 @@ class _InputFormState extends State<InputForm> {
       _date = widget.item!.date;
       _location = widget.item!.location;
       _julkinen = widget.item!.julkinen;
+      _imageUrl = widget.item!.imageUrl;
 
       _isEdit = true;
       log("editoidaan${widget.item!.id}");
@@ -130,11 +134,33 @@ class _InputFormState extends State<InputForm> {
               ),
               Text('Julkinen ( kaikkien nähtävissä )'),
             ]),
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            _imageUrl == null
+                ? const Text('Ei kuvaa') // No image selected
+                : Image.network(
+                    _imageUrl!,
+                    width: 200,
+                    height: 200,
+                  ),
+            const SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               Padding(
                 padding: const EdgeInsets.only(left: 12.0),
-                child:
-                    ElevatedButton(onPressed: null, child: Text("Lisää kuva")),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final imageUrl = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CameraScreen(),
+                      ),
+                    );
+                    if (imageUrl != null) {
+                      setState(() {
+                        _imageUrl = imageUrl;
+                      });
+                    }
+                  },
+                  child: Text("Uusi kuva"),
+                ),
               ),
               Padding(
                 padding:
@@ -160,45 +186,53 @@ class _InputFormState extends State<InputForm> {
                 ),
               ),
             ]),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  TripItem item = TripItem(
-                    title: _title,
-                    description: _description,
-                    date: _date,
-                    id: _id,
-                    location: _location,
-                    julkinen: _julkinen,
-                  );
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      TripItem item = TripItem(
+                        title: _title,
+                        description: _description,
+                        date: _date,
+                        id: _id,
+                        location: _location,
+                        julkinen: _julkinen,
+                        imageUrl: _imageUrl,
+                      );
 
-                  if (!_isEdit) {
-                    // opettele huutomerkit
-                    Provider.of<TripListManager>(context, listen: false).addItem(
-                        item); // lisätään uusi tehtävä käyttäen Todolistmanagerin metodeja
-                    log("Lisätty: id ${item.id}");
+                      if (!_isEdit) {
+                        // opettele huutomerkit
+                        Provider.of<TripListManager>(context, listen: false)
+                            .addItem(
+                                item); // lisätään uusi tehtävä käyttäen Todolistmanagerin metodeja
+                        log("Lisätty: id ${item.id}");
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Lisätty uusi tehtävä")),
-                    );
-                  } else {
-                    Provider.of<TripListManager>(context, listen: false)
-                        .update(item);
-                    log("editoitu: id ${item.id}");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Lisätty uusi tehtävä")),
+                        );
+                      } else {
+                        Provider.of<TripListManager>(context, listen: false)
+                            .update(item);
+                        log("editoitu: id ${item.id}");
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Editoitu tehtävää")),
-                    );
-                  }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Editoitu tehtävää")),
+                        );
+                      }
 
-                  Navigator.pop(context); //hyppää aloitusnäyttöön, miksi
-                }
-              },
-              child: _isEdit
-                  ? const Text(
-                      "Muokkaus valmis") // vaihtaa tekstin _isEdit riippuen
-                  : const Text("Valmis"), //opettele kysymysmerkki miten toimii
-            ),
+                      Navigator.pop(context); //hyppää aloitusnäyttöön, miksi
+                    }
+                  },
+                  child: _isEdit
+                      ? const Text(
+                          "Muokkaus valmis") // vaihtaa tekstin _isEdit riippuen
+                      : const Text(
+                          "Valmis"), //opettele kysymysmerkki miten toimii
+                ),
+              ],
+            )
           ],
         ),
       ),
