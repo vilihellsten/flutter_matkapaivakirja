@@ -17,7 +17,8 @@ class AddTripView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Lisää uusi matka")),
+      appBar: AppBar(
+          title: Text(item == null ? "Lisää uusi matka" : "Muokkaa matkaa")),
       body: InputForm(item: item),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 8),
@@ -128,14 +129,14 @@ class _InputFormState extends State<InputForm> {
                 value: _julkinen,
                 onChanged: (bool? value) {
                   setState(() {
-                    _julkinen = value ?? false; // Update the state
+                    _julkinen = value ?? false;
                   });
                 },
               ),
               Text('Julkinen ( kaikkien nähtävissä )'),
             ]),
             _imageUrl == null
-                ? const Text('Ei kuvaa') // No image selected
+                ? const Text('Ei kuvaa')
                 : Image.network(
                     _imageUrl!,
                     width: 200,
@@ -205,12 +206,11 @@ class _InputFormState extends State<InputForm> {
                       if (!_isEdit) {
                         // opettele huutomerkit
                         Provider.of<TripListManager>(context, listen: false)
-                            .addItem(
-                                item); // lisätään uusi tehtävä käyttäen Todolistmanagerin metodeja
+                            .addItem(item);
                         log("Lisätty: id ${item.id}");
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Lisätty uusi tehtävä")),
+                          const SnackBar(content: Text("Lisätty uusi matka")),
                         );
                       } else {
                         Provider.of<TripListManager>(context, listen: false)
@@ -218,18 +218,17 @@ class _InputFormState extends State<InputForm> {
                         log("editoitu: id ${item.id}");
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Editoitu tehtävää")),
+                          const SnackBar(content: Text("Editoitu matkaa")),
                         );
                       }
 
-                      Navigator.pop(context); //hyppää aloitusnäyttöön, miksi
+                      Navigator.pop(context);
                     }
                   },
                   child: _isEdit
                       ? const Text(
                           "Muokkaus valmis") // vaihtaa tekstin _isEdit riippuen
-                      : const Text(
-                          "Valmis"), //opettele kysymysmerkki miten toimii
+                      : const Text("Valmis"),
                 ),
               ],
             )

@@ -1,24 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_matkapaivakirja/data/firebase_helper.dart';
 import 'package:flutter_matkapaivakirja/view/public_trip_list.dart';
 import 'package:flutter_matkapaivakirja/view/settings_screen.dart';
 import 'package:flutter_matkapaivakirja/view/weather.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:flutter_matkapaivakirja/data/trip_list_manager.dart';
 import 'package:flutter_matkapaivakirja/view/add_trip.dart';
 import 'package:flutter_matkapaivakirja/view/trip_list.dart';
-import 'package:flutter_matkapaivakirja/data/db_helper.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
-
 import 'package:flutter_matkapaivakirja/view/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'dart:developer'; // Add this import for logging
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
+
 import 'package:http/http.dart' as http;
 
 class WeatherView extends StatefulWidget {
@@ -168,7 +168,7 @@ class _WeatherViewState extends State<WeatherView> {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           onPressed: () {
-            Navigator.pop(context); // Close the current view
+            Navigator.pop(context);
           },
           child: const Icon(Icons.arrow_back),
         ),

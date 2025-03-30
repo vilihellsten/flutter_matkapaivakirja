@@ -12,9 +12,9 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  String? _imagePath; // Holds the local image path
+  String? _imagePath;
   String? _oldImagePath;
-  bool _isUploading = false; // Tracks upload status
+  bool _isUploading = false;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -32,7 +32,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<String?> _uploadImage() async {
     if (_imagePath == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No image selected!')),
+        const SnackBar(content: Text('Ei valittua kuvaa')),
       );
       return null;
     }
@@ -51,7 +51,7 @@ class _CameraScreenState extends State<CameraScreen> {
           _oldImagePath = null; // Reset the old image path
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete old image: $e')),
+            SnackBar(content: Text('Virhe vanhaa kuvaa poistaessa: $e')),
           );
         }
       }
@@ -75,7 +75,7 @@ class _CameraScreenState extends State<CameraScreen> {
       return downloadUrl; // Return the image URL
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to upload image: $e')),
+        SnackBar(content: Text('Kuvan lisäys epäonnistui: $e')),
       );
       return null;
     } finally {
@@ -88,47 +88,43 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Camera Screen')),
+      appBar: AppBar(title: const Text('Kuvan lisäys')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Display the selected image
             _imagePath == null
-                ? const Text('Ei kuvaa') // No image selected
+                ? const Text('Ei kuvaa')
                 : Image.file(
                     File(_imagePath!),
-                    width: 200,
-                    height: 200,
+                    width: 400,
+                    height: 400,
                   ),
             const SizedBox(height: 20),
 
-            // Button to take a picture
             ElevatedButton(
               onPressed: _pickImage,
               child: const Text('Ota kuva'),
             ),
             const SizedBox(height: 20),
 
-            // Button to upload the image and return the URL
             _isUploading
-                ? const CircularProgressIndicator() // Show progress indicator during upload
+                ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: () async {
                       final imageUrl = await _uploadImage();
                       if (imageUrl != null) {
-                        Navigator.pop(
-                            context, imageUrl); // Return the image URL
+                        Navigator.pop(context, imageUrl);
                       }
                     },
                     child: const Text('Lähetä kuva'),
                   ),
             const SizedBox(height: 20),
 
-            // Button to go back without selecting an image
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Takaisin'),
+              child: const Text('Peruuta'),
             ),
           ],
         ),

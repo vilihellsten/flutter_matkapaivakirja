@@ -4,12 +4,13 @@ import 'package:geolocator/geolocator.dart';
 
 class MapsScreen extends StatefulWidget {
   final LatLng? initialLocation; // Optional initial location
-  final bool readOnly; // New parameter to enable read-only mode
+  final bool
+      readOnly; //näyttää vain sijainnin eikä voi muokata  julkiset matkat näkymässä
 
   const MapsScreen({
     Key? key,
     this.initialLocation,
-    this.readOnly = false, // Default is false (editable mode)
+    this.readOnly = false, // julkiset matkat näkymä
   }) : super(key: key);
 
   @override
@@ -75,8 +76,8 @@ class _MapsScreenState extends State<MapsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: widget.readOnly
-            ? const Text("Näytä sijainti") // Title for read-only mode
-            : const Text("Valitse sijainti"), // Title for editable mode
+            ? const Text("Näytä sijainti") // ei muokkaustila
+            : const Text("Valitse sijainti"), //muokkaustila
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -108,7 +109,7 @@ class _MapsScreenState extends State<MapsScreen> {
       floatingActionButton: widget.readOnly
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.pop(context); // Close the map without changes
+                Navigator.pop(context);
               },
               child: const Icon(Icons.close),
             )

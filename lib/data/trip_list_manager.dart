@@ -73,22 +73,6 @@ class TripListManager extends ChangeNotifier {
       notifyListeners();
     }
   }
-/*
-  void toggleDone(TripItem item) {
-    item.done = !item.done;
-    //dbHelper.update(item);
-    fbHelper.updateTodoItem(item); //uusi
-    notifyListeners();
-  }*/
-
-  /*
-  Future<void> loadFromDB() async {
-    final list = await dbHelper.queryAllRows();
-    for (TripItem item in list) {
-      _items.add(item);
-    }
-    notifyListeners();
-  }*/
 
   void loadFromFirebase() async {
     log("loadFromFirebase");

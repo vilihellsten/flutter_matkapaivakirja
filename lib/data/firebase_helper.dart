@@ -6,12 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 
 class FirebaseHelper {
-  /*
-  void clearUserData() {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    FirebaseDatabase.instance.ref().child('tripitems').child(userId).remove();
-  }*/
-
+  // omat matkat
   DatabaseReference getUserRef() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -20,6 +15,7 @@ class FirebaseHelper {
     return FirebaseDatabase.instance.ref().child('todoitems').child(user.uid);
   }
 
+  // julkiset matkat
   getPublicRef() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -28,6 +24,7 @@ class FirebaseHelper {
     return FirebaseDatabase.instance.ref().child("todoitems").once();
   }
 
+  // matkan tallennus
   void saveTodoItem(TripItem item) {
     final userRef = getUserRef();
     var itemRef = userRef.push();
@@ -36,6 +33,7 @@ class FirebaseHelper {
     itemRef.set(item.toJson());
   }
 
+  // matkan poisto
   void deleteTodoItem(TripItem item) {
     if (item.fbid != null) {
       getUserRef().child(item.fbid!).remove();
@@ -45,19 +43,21 @@ class FirebaseHelper {
       try {
         final oldImageRef = FirebaseStorage.instance.refFromURL(item.imageUrl!);
         oldImageRef.delete();
-        item.imageUrl = null; // Reset the old image path
+        item.imageUrl = null;
       } catch (e) {
         log('Error deleting image: $e');
       }
     }
   }
 
+  // matkan päivitys
   void updateTodoItem(TripItem item) {
     if (item.fbid != null) {
       getUserRef().child(item.fbid!).update(item.toJson());
     }
   }
 
+  // hakee omat matkat
   Future<List<TripItem>> getData() async {
     List<TripItem> items = [];
 
@@ -72,6 +72,7 @@ class FirebaseHelper {
     return items;
   }
 
+  // hakee kaikki julkiset matkat
   Future<List<TripItem>> getPublicData() async {
     List<TripItem> items = [];
 
@@ -79,19 +80,16 @@ class FirebaseHelper {
 
     var snapshot = event.snapshot;
 
-    // Iterate through each user's node
     for (var user in snapshot.children) {
-      // Iterate through each trip item in the user's node
       for (var trip in user.children) {
         final tripData = trip.value as Map<dynamic, dynamic>;
         if (tripData['julkinen'] == true) {
           TripItem item = TripItem.fromJson(tripData);
-          item.fbid = trip.key; // Save the Firebase ID
+          item.fbid = trip.key;
           items.add(item);
         }
       }
     }
-
     return items;
   }
 }

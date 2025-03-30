@@ -15,12 +15,11 @@ class TripListView extends StatefulWidget {
 }
 
 class _TripListViewState extends State<TripListView> {
-  String _searchQuery = ""; // Holds the current search query
+  String _searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
     return Consumer<TripListManager>(builder: (context, listManager, child) {
-      // Filter the user's trips based on the search query
       final filteredItems = listManager.items.where((item) {
         final query = _searchQuery.toLowerCase();
         return item.title.toLowerCase().contains(query) ||
@@ -60,7 +59,7 @@ class _TripListViewState extends State<TripListView> {
                 ),
                 onChanged: (value) {
                   setState(() {
-                    _searchQuery = value; // Update the search query
+                    _searchQuery = value;
                   });
                 },
               ),
@@ -69,7 +68,7 @@ class _TripListViewState extends State<TripListView> {
               child: filteredItems.isEmpty
                   ? const Center(child: Text("Ei tuloksia haulle."))
                   : ListView.builder(
-                      itemCount: filteredItems.length, // Use the filtered list
+                      itemCount: filteredItems.length,
                       itemBuilder: (context, index) {
                         return _buildTodoCard(
                             filteredItems[index], context, listManager);
@@ -135,7 +134,7 @@ class _TripListViewState extends State<TripListView> {
                         MaterialPageRoute(
                           builder: (context) => MapsScreen(
                             initialLocation: item.location,
-                            readOnly: true, // Open in read-only mode
+                            readOnly: true,
                           ),
                         ),
                       );
@@ -178,20 +177,19 @@ void _confirmDelete(context, listmanager, item) {
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text("Poista"),
-        content: const Text("Oletko varma, että haluat poistaa tämän?"),
+        content: const Text("Oletko varma, että haluat poistaa tämän matkan?"),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
                 },
                 child: const Text("Ei"),
               ),
               TextButton(
                   onPressed: () {
-                    // Call the delete method from FirebaseHelper
                     listmanager.delete(item);
                     Navigator.of(context).pop();
                   },

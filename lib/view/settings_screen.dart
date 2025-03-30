@@ -7,7 +7,7 @@ class SettingsController extends GetxController {
 
   void toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
-    log("Darkmodevalue ${isDarkMode.value}");
+    log("Teema ${isDarkMode.value}");
   }
 }
 
@@ -34,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           onPressed: () {
-            Navigator.pop(context); // Close the current view
+            Navigator.pop(context);
           },
           child: const Icon(Icons.arrow_back),
         ),

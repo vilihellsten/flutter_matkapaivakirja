@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_matkapaivakirja/data/trip_item.dart';
 import 'package:flutter_matkapaivakirja/view/map_screen.dart';
@@ -39,7 +38,25 @@ class _PublicTripListViewState extends State<PublicTripListView> {
       }).toList();
 
       return Scaffold(
-        appBar: AppBar(title: const Text("Julkiset Matkat")),
+        appBar: AppBar(
+          title: const Text("Julkiset Matkat"),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add),
+              tooltip: 'Lisää uusi',
+              onPressed: () {
+                Navigator.pushNamed(context, '/add-trip');
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person),
+              tooltip: 'Profiili',
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
+          ],
+        ),
         body: Column(
           children: [
             Padding(
