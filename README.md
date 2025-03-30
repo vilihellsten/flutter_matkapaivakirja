@@ -1,6 +1,8 @@
 # flutter_matkapaivakirja
 
-A new Flutter project.
+Sovellus on matkapäiväkirja johon käyttäjä voi lisätä ja jakaa muiden käyttäjien kanssa tapahtumia tai paikkoja missä on käynyt. Tapahtumaan lisätään matkan tiedot, voit myös lisätä sijainnin sekä kuvan.
+
+[Loppuraportti.docx](https://github.com/user-attachments/files/19526801/Loppuraportti.docx)
 
 ## Getting Started
 
