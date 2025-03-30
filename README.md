@@ -4,6 +4,17 @@ Sovellus on matkapäiväkirja johon käyttäjä voi lisätä ja jakaa muiden kä
 
 [Loppuraportti.docx](https://github.com/user-attachments/files/19526801/Loppuraportti.docx)
 
+Mitä ominaisuuksia sovelluksessa on
+-	Sovellukseen kirjautumiseen ja tunnistautumiseen käytetään firebasea
+-	Käyttäjä voi lisätä matkoja päiväkirjaan.
+-	Matkoihin voi lisätä otsikon, kuvauksen, päivämäärän, valita onko matka julkinen vai yksityinen ja lisätä sijainnin sekä kuvan matkasta
+-	Matkoja voi muokata niiden lisäämisen jälkeen tai poistaa
+-	Käyttäjät voivat hakea aikaisempia matkoja otsikon tai kuvauksen avulla
+-	Käyttäjät voivat katsoa muiden käyttäjien lisäämiä matkoja, kunhan matkat ovat merkitty julkisiksi
+-	Käyttäjät eivät voi muokata tai poistaa muiden tekemiä matkoja
+-	Käyttäjät saavat paikallisia säätietoja ja voivat etsiä muiden kaupunkien säätietoja
+-	Käyttäjä voi valita vaalean tai tumman teeman väliltä
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
