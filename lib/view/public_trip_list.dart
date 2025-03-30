@@ -64,7 +64,7 @@ class _PublicTripListViewState extends State<PublicTripListView> {
               child: TextField(
                 decoration: const InputDecoration(
                   labelText: "Haku",
-                  hintText: "Hae matkoja paikan tai kuvauksen perusteella",
+                  hintText: "Hae matkoja otsikon tai kuvauksen perusteella",
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(),
                 ),
