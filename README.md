@@ -1,6 +1,6 @@
 # flutter_matkapaivakirja
 
-Sovellus on matkapäiväkirja johon käyttäjä voi lisätä ja jakaa muiden käyttäjien kanssa tapahtumia tai paikkoja missä on käynyt. Tapahtumaan lisätään matkan tiedot, voit myös lisätä sijainnin sekä kuvan.
+Käyttäjät voivat tallentaa ja jakaa matkakokemuksiaan muiden käyttäjien kanssa. Jokainen käyntikohde sisältää matkan perustiedot, ja siihen voi liittää myös sijainnin sekä valokuvan. Näin käyttäjät voivat dokumentoida matkojaan ja jakaa ne helposti muiden nähtäväksi. Projektissa hyödynnetään Googlen FireBase palvelua tietojen säilömiseen ja käyttäjien rekisteröitymiseen.
 
 [Lyhyt raportti.docx](https://github.com/user-attachments/files/23282601/Lyhyt.raportti.docx)
 
